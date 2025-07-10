@@ -1,0 +1,49 @@
+body {
+  font-family: 'Playfair Display', serif;
+  background: #fdf6f0;
+  color: #3e3e3e;
+  max-width: 700px;
+  margin: auto;
+  padding: 2rem;
+}
+
+h1, h2 {
+  color: #8b5e3c;
+}
+
+.product {
+  background: #fff8f4;
+  border: 1px solid #ecdac9;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  background: #e6c5a8;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #d5b295;
+}
+
+.cart {
+  background: #fff2e5;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-family: monospace;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #7c6a5c;
+  margin-top: 2rem;
+}

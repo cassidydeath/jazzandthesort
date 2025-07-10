@@ -4,66 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jazz And The Sort</title>
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #fdf6f0;
-      color: #3e3e3e;
-      max-width: 700px;
-      margin: auto;
-      padding: 2rem;
-    }
-    h1, h2 {
-      color: #8b5e3c;
-    }
-    .product {
-      background: #fff8f4;
-      border: 1px solid #ecdac9;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    button {
-      background: #e6c5a8;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #fff;
-      font-weight: bold;
-    }
-    button:hover {
-      background: #d5b295;
-    }
-    .cart {
-      background: #fff2e5;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-top: 2rem;
-      font-family: monospace;
-    }
-    .footer {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #7c6a5c;
-      margin-top: 2rem;
-    }
-  </style>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <h1>🌿 My Cozy Crypto Shop</h1>
-  <p>Select items below. Prices are in USD. Your cart will convert the total to your selected cryptocurrency.</p>
+  <p>Select items below. Prices are in USD, and your total will be converted to your chosen cryptocurrency.</p>
 
-  <label for="currency-select"><strong>Choose payment currency:</strong></label>
+  <label for="currency-select"><strong>Currency:</strong></label>
   <select id="currency-select" onchange="updateCart()">
     <option value="xmr">XMR (Monero)</option>
     <option value="btc">BTC (Bitcoin)</option>
   </select>
 
-  <p><strong>Current Prices:</strong><br>
-    XMR: <span id="xmr-price">Loading...</span> USD<br>
-    BTC: <span id="btc-price">Loading...</span> USD
+  <p>
+    <strong>Current XMR Price:</strong> <span id="xmr-price">Loading...</span> USD<br />
+    <strong>Current BTC Price:</strong> <span id="btc-price">Loading...</span> USD
   </p>
 
   <div class="product">
@@ -86,101 +47,25 @@
 
   <div class="cart" id="cart">
     <h2>Your Cart</h2>
-    <button onclick="clearCart()" style="margin-bottom: 1rem;">🗑️ Clear Cart</button>
+    <button onclick="clearCart()">🗑️ Clear Cart</button>
     <ul id="cart-items"></ul>
     <p><strong>Total:</strong> <span id="total-usd">0.00</span> USD</p>
-    <p><strong>Pay:</strong> <span id="total-crypto">0.00000</span> <span id="crypto-symbol">XMR</span></p>
+    <p><strong>Pay:</strong> <span id="total-crypto">0.00000000</span> <span id="crypto-symbol">XMR</span></p>
+
     <div>
-      <p><strong>Send payment to:</strong><br>
-        <span id="wallet-address">8Bxx...yourMoneroAddressHere...gA3</span></p>
-      <p><strong>Include this message:</strong><br>
+      <p><strong>Send payment to:</strong><br />
+        <code id="wallet-address">8Bxx...yourMoneroAddressHere...gA3</code></p>
+      <p><strong>Include this message:</strong><br />
         <code id="order-note">yourname@protonmail.com</code></p>
     </div>
   </div>
 
   <div class="footer">
-    📨 After paying, email <strong>yourname@protonmail.com</strong> with your TXID.<br>
+    📨 After paying, email <strong>yourname@protonmail.com</strong> with your TXID.<br />
     Thank you for supporting handmade magick!
   </div>
 
-  <script>
-  let cart = [];
-  let prices = { xmr: 0, btc: 0 };
-
-  const walletAddresses = {
-    xmr: '8Bxx...yourMoneroAddressHere...gA3',
-    btc: 'bc1q...yourBitcoinAddressHere...9dk'
-  };
-
-  async function fetchPrices() {
-    try {
-      const cacheBuster = new Date().getTime(); // Avoid cached results
-      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=monero,bitcoin&vs_currencies=usd&cb=${cacheBuster}`);
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-      const data = await res.json();
-
-      prices.xmr = parseFloat(data.monero.usd);
-      prices.btc = parseFloat(data.bitcoin.usd);
-
-      document.getElementById('xmr-price').textContent = `$${prices.xmr.toFixed(2)}`;
-      document.getElementById('btc-price').textContent = `$${prices.btc.toFixed(2)}`;
-
-      updateCart();
-    } catch (err) {
-      console.error("Failed to fetch prices:", err);
-      document.getElementById('xmr-price').textContent = 'Error';
-      document.getElementById('btc-price').textContent = 'Error';
-    }
-  }
-
-  function addToCart(name, priceUsd) {
-    cart.push({ name, priceUsd });
-    updateCart();
-  }
-
-  function clearCart() {
-    cart = [];
-    updateCart();
-  }
-
-  function updateCart() {
-    const currency = document.getElementById('currency-select').value;
-    const priceUsd = prices[currency];
-    const cartItems = document.getElementById('cart-items');
-    const totalUsdField = document.getElementById('total-usd');
-    const totalCryptoField = document.getElementById('total-crypto');
-    const cryptoSymbol = document.getElementById('crypto-symbol');
-    const noteField = document.getElementById('order-note');
-    const walletField = document.getElementById('wallet-address');
-
-    cartItems.innerHTML = '';
-    let totalUsd = 0;
-    let note = 'Order: ';
-
-    cart.forEach((item, i) => {
-      const li = document.createElement('li');
-      li.textContent = `${item.name} - $${item.priceUsd.toFixed(2)}`;
-      cartItems.appendChild(li);
-      totalUsd += item.priceUsd;
-      note += `${item.name}${i < cart.length - 1 ? ', ' : ''}`;
-    });
-
-    let totalCrypto = 0;
-    if (priceUsd > 0) {
-      totalCrypto = totalUsd / priceUsd;
-    }
-
-    totalUsdField.textContent = totalUsd.toFixed(2);
-    totalCryptoField.textContent = totalCrypto.toFixed(8); // More accurate crypto value
-    cryptoSymbol.textContent = currency.toUpperCase();
-    noteField.textContent = `order: ${note} yourname@protonmail.com`;
-    walletField.textContent = walletAddresses[currency];
-  }
-
-  // Auto-refresh prices every 60 seconds
-  fetchPrices();
-  setInterval(fetchPrices, 60000);
-</script>
-
+  <!-- External JS -->
+  <script src="script.js"></script>
 </body>
 </html>

@@ -53,32 +53,35 @@
 <body>
 
   <h1>🌿 My Cozy Monero Shop</h1>
-  <p>Select items below. When ready, follow the instructions in the cart to pay with XMR.</p>
+  <p>Select items below. Prices are in USD, and the cart will convert your total to XMR using the live exchange rate.</p>
+  <p><strong>Current XMR Price:</strong> <span id="xmr-price">Loading...</span> USD</p>
 
   <div class="product">
     <h2>🍯 Herbal Honey</h2>
-    <p>0.055 XMR</p>
-    <button onclick="addToCart('Herbal Honey', 0.055)">Add to Cart</button>
+    <p>$12.00</p>
+    <button onclick="addToCart('Herbal Honey', 12.00)">Add to Cart</button>
   </div>
 
   <div class="product">
     <h2>📜 Custom Rune Scroll</h2>
-    <p>0.099 XMR</p>
-    <button onclick="addToCart('Rune Scroll', 0.099)">Add to Cart</button>
+    <p>$18.00</p>
+    <button onclick="addToCart('Rune Scroll', 18.00)">Add to Cart</button>
   </div>
 
   <div class="product">
     <h2>🕯 Beeswax Spell Candle</h2>
-    <p>0.035 XMR</p>
-    <button onclick="addToCart('Spell Candle', 0.035)">Add to Cart</button>
+    <p>$8.00</p>
+    <button onclick="addToCart('Spell Candle', 8.00)">Add to Cart</button>
   </div>
 
   <div class="cart" id="cart">
     <h2>Your Cart</h2>
+    <button onclick="clearCart()" style="margin-bottom: 1rem;">🗑️ Clear Cart</button>
     <ul id="cart-items"></ul>
-    <p><strong>Total:</strong> <span id="total">0</span> XMR</p>
+    <p><strong>Total:</strong> <span id="total-usd">0.00</span> USD</p>
+    <p><strong>Pay:</strong> <span id="total-xmr">0.000</span> XMR</p>
     <div>
-      <p><strong>Send payment to:</strong><br>  
+      <p><strong>Send payment to:</strong><br>
       8Bxx...yourMoneroAddressHere...gA3</p>
       <p><strong>Include this message:</strong><br>
       <code id="order-note">yourname@protonmail.com</code></p>
@@ -92,30 +95,55 @@
 
   <script>
     let cart = [];
-    function addToCart(name, price) {
-      cart.push({ name, price });
+    let xmrPrice = 0;
+
+    // Fetch XMR price in USD
+    async function getXmrPrice() {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=monero&vs_currencies=usd');
+      const data = await res.json();
+      xmrPrice = data.monero.usd;
+      document.getElementById('xmr-price').textContent = `$${xmrPrice.toFixed(2)}`;
       updateCart();
     }
+
+    function addToCart(name, priceUsd) {
+      cart.push({ name, priceUsd });
+      updateCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      updateCart();
+    }
+
     function updateCart() {
       const cartItems = document.getElementById('cart-items');
-      const totalField = document.getElementById('total');
+      const totalUsdField = document.getElementById('total-usd');
+      const totalXmrField = document.getElementById('total-xmr');
       const noteField = document.getElementById('order-note');
 
       cartItems.innerHTML = '';
-      let total = 0;
+      let totalUsd = 0;
       let note = 'Order: ';
+
       cart.forEach((item, i) => {
         const li = document.createElement('li');
-        li.textContent = `${item.name} - ${item.price.toFixed(3)} XMR`;
+        li.textContent = `${item.name} - $${item.priceUsd.toFixed(2)}`;
         cartItems.appendChild(li);
-        total += item.price;
+        totalUsd += item.priceUsd;
         note += `${item.name}${i < cart.length - 1 ? ', ' : ''}`;
       });
 
-      totalField.textContent = total.toFixed(3);
+      const totalXmr = xmrPrice > 0 ? (totalUsd / xmrPrice) : 0;
+      totalUsdField.textContent = totalUsd.toFixed(2);
+      totalXmrField.textContent = totalXmr.toFixed(5);
       noteField.textContent = `order: ${note} yourname@protonmail.com`;
     }
+
+    // Load price on page load
+    getXmrPrice();
   </script>
 
 </body>
 </html>
+

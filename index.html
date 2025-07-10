@@ -52,6 +52,17 @@
 </head>
 <body>
 
+<p>
+  <label for="currency">Pay with:</label>
+  <select id="currency" onchange="updateCart()">
+    <option value="xmr">XMR</option>
+    <option value="btc">BTC</option>
+  </select>
+</p>
+<p><strong>Current Price:</strong> 
+  <span id="crypto-price">Loading...</span> USD
+</p>
+
   <h1>🌿 My Cozy Monero Shop</h1>
   <p>Select items below. Prices are in USD, and the cart will convert your total to XMR using the live exchange rate.</p>
   <p><strong>Current XMR Price:</strong> <span id="xmr-price">Loading...</span> USD</p>
@@ -143,6 +154,62 @@
     // Load price on page load
     getXmrPrice();
   </script>
+<script>
+  let cart = [];
+  let prices = {
+    xmr: 0,
+    btc: 0
+  };
+
+  async function getPrices() {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=monero,bitcoin&vs_currencies=usd');
+    const data = await res.json();
+    prices.xmr = data.monero.usd;
+    prices.btc = data.bitcoin.usd;
+    updateCart();
+  }
+
+  function addToCart(name, priceUsd) {
+    cart.push({ name, priceUsd });
+    updateCart();
+  }
+
+  function clearCart() {
+    cart = [];
+    updateCart();
+  }
+
+  function updateCart() {
+    const cartItems = document.getElementById('cart-items');
+    const totalUsdField = document.getElementById('total-usd');
+    const totalCryptoField = document.getElementById('total-xmr');
+    const noteField = document.getElementById('order-note');
+    const currency = document.getElementById('currency').value;
+    const cryptoPrice = prices[currency];
+
+    // Update label
+    document.getElementById('crypto-price').textContent = `$${cryptoPrice.toFixed(2)} (${currency.toUpperCase()})`;
+
+    cartItems.innerHTML = '';
+    let totalUsd = 0;
+    let note = 'Order: ';
+
+    cart.forEach((item, i) => {
+      const li = document.createElement('li');
+      li.textContent = `${item.name} - $${item.priceUsd.toFixed(2)}`;
+      cartItems.appendChild(li);
+      totalUsd += item.priceUsd;
+      note += `${item.name}${i < cart.length - 1 ? ', ' : ''}`;
+    });
+
+    const totalCrypto = cryptoPrice > 0 ? (totalUsd / cryptoPrice) : 0;
+    totalUsdField.textContent = totalUsd.toFixed(2);
+    totalCryptoField.textContent = `${totalCrypto.toFixed(5)} ${currency.toUpperCase()}`;
+    noteField.textContent = `order: ${note} yourname@protonmail.com`;
+  }
+
+  getPrices();
+</script>
 
 </body>
 </html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Cozy Monero Shop</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #fdf6f0;
+      color: #3e3e3e;
+      max-width: 700px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h1, h2 {
+      color: #8b5e3c;
+    }
+    .product {
+      background: #fff8f4;
+      border: 1px solid #ecdac9;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      background: #e6c5a8;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #d5b295;
+    }
+    .cart {
+      background: #fff2e5;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-family: monospace;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #7c6a5c;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌿 My Cozy Monero Shop</h1>
+  <p>Select items below. When ready, follow the instructions in the cart to pay with XMR.</p>
+
+  <div class="product">
+    <h2>🍯 Herbal Honey</h2>
+    <p>0.055 XMR</p>
+    <button onclick="addToCart('Herbal Honey', 0.055)">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h2>📜 Custom Rune Scroll</h2>
+    <p>0.099 XMR</p>
+    <button onclick="addToCart('Rune Scroll', 0.099)">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h2>🕯 Beeswax Spell Candle</h2>
+    <p>0.035 XMR</p>
+    <button onclick="addToCart('Spell Candle', 0.035)">Add to Cart</button>
+  </div>
+
+  <div class="cart" id="cart">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <p><strong>Total:</strong> <span id="total">0</span> XMR</p>
+    <div>
+      <p><strong>Send payment to:</strong><br>  
+      8Bxx...yourMoneroAddressHere...gA3</p>
+      <p><strong>Include this message:</strong><br>
+      <code id="order-note">yourname@protonmail.com</code></p>
+    </div>
+  </div>
+
+  <div class="footer">
+    📨 After paying, email <strong>yourname@protonmail.com</strong> with your TXID.<br>
+    Thank you for supporting handmade magick!
+  </div>
+
+  <script>
+    let cart = [];
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      updateCart();
+    }
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      const totalField = document.getElementById('total');
+      const noteField = document.getElementById('order-note');
+
+      cartItems.innerHTML = '';
+      let total = 0;
+      let note = 'Order: ';
+      cart.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - ${item.price.toFixed(3)} XMR`;
+        cartItems.appendChild(li);
+        total += item.price;
+        note += `${item.name}${i < cart.length - 1 ? ', ' : ''}`;
+      });
+
+      totalField.textContent = total.toFixed(3);
+      noteField.textContent = `order: ${note} yourname@protonmail.com`;
+    }
+  </script>
+
+</body>
+</html>

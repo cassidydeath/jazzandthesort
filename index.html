@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -53,10 +52,19 @@
 </head>
 <body>
 
+  <h1>🌿 My Cozy Crypto Shop</h1>
+  <p>Select items below. Prices are in USD. Your cart will convert the total to your selected cryptocurrency.</p>
 
-  <h1>🌿 My Cozy Monero Shop</h1>
-  <p>Select items below. Prices are in USD, and the cart will convert your total to XMR using the live exchange rate.</p>
-  <p><strong>Current XMR Price:</strong> <span id="xmr-price">Loading...</span> USD</p>
+  <label for="currency-select"><strong>Choose payment currency:</strong></label>
+  <select id="currency-select" onchange="updateCart()">
+    <option value="xmr">XMR (Monero)</option>
+    <option value="btc">BTC (Bitcoin)</option>
+  </select>
+
+  <p><strong>Current Prices:</strong><br>
+    XMR: <span id="xmr-price">Loading...</span> USD<br>
+    BTC: <span id="btc-price">Loading...</span> USD
+  </p>
 
   <div class="product">
     <h2>🍯 Herbal Honey</h2>
@@ -81,12 +89,12 @@
     <button onclick="clearCart()" style="margin-bottom: 1rem;">🗑️ Clear Cart</button>
     <ul id="cart-items"></ul>
     <p><strong>Total:</strong> <span id="total-usd">0.00</span> USD</p>
-    <p><strong>Pay:</strong> <span id="total-xmr">0.000</span> XMR</p>
+    <p><strong>Pay:</strong> <span id="total-crypto">0.00000</span> <span id="crypto-symbol">XMR</span></p>
     <div>
       <p><strong>Send payment to:</strong><br>
-      8Bxx...yourMoneroAddressHere...gA3</p>
+        <span id="wallet-address">8Bxx...yourMoneroAddressHere...gA3</span></p>
       <p><strong>Include this message:</strong><br>
-      <code id="order-note">yourname@protonmail.com</code></p>
+        <code id="order-note">yourname@protonmail.com</code></p>
     </div>
   </div>
 
@@ -95,17 +103,29 @@
     Thank you for supporting handmade magick!
   </div>
 
-   <script>
+  <script>
     let cart = [];
-    let xmrPrice = 0;
+    let prices = { xmr: 0, btc: 0 };
 
-    // Fetch XMR price in USD
-    async function getXmrPrice() {
-      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=monero&vs_currencies=usd');
-      const data = await res.json();
-      xmrPrice = data.monero.usd;
-      document.getElementById('xmr-price').textContent = `$${xmrPrice.toFixed(2)}`;
-      updateCart();
+    const walletAddresses = {
+      xmr: '8Bxx...yourMoneroAddressHere...gA3',
+      btc: 'bc1q...yourBitcoinAddressHere...9dk'
+    };
+
+    async function fetchPrices() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=monero,bitcoin&vs_currencies=usd');
+        const data = await res.json();
+        prices.xmr = data.monero.usd;
+        prices.btc = data.bitcoin.usd;
+
+        document.getElementById('xmr-price').textContent = `$${prices.xmr.toFixed(2)}`;
+        document.getElementById('btc-price').textContent = `$${prices.btc.toFixed(2)}`;
+
+        updateCart();
+      } catch (err) {
+        console.error("Error fetching crypto prices:", err);
+      }
     }
 
     function addToCart(name, priceUsd) {
@@ -119,10 +139,14 @@
     }
 
     function updateCart() {
+      const currency = document.getElementById('currency-select').value;
+      const priceUsd = prices[currency];
       const cartItems = document.getElementById('cart-items');
       const totalUsdField = document.getElementById('total-usd');
-      const totalXmrField = document.getElementById('total-xmr');
+      const totalCryptoField = document.getElementById('total-crypto');
+      const cryptoSymbol = document.getElementById('crypto-symbol');
       const noteField = document.getElementById('order-note');
+      const walletField = document.getElementById('wallet-address');
 
       cartItems.innerHTML = '';
       let totalUsd = 0;
@@ -136,20 +160,16 @@
         note += `${item.name}${i < cart.length - 1 ? ', ' : ''}`;
       });
 
-      const totalXmr = xmrPrice > 0 ? (totalUsd / xmrPrice) : 0;
+      const totalCrypto = (priceUsd > 0) ? (totalUsd / priceUsd) : 0;
+
       totalUsdField.textContent = totalUsd.toFixed(2);
-      totalXmrField.textContent = totalXmr.toFixed(5);
+      totalCryptoField.textContent = totalCrypto.toFixed(5);
+      cryptoSymbol.textContent = currency.toUpperCase();
       noteField.textContent = `order: ${note} yourname@protonmail.com`;
+      walletField.textContent = walletAddresses[currency];
     }
 
-    // Load price on page load
-    getXmrPrice();
+    fetchPrices();
   </script>
-
 </body>
 </html>
-
-
-</body>
-</html>
-

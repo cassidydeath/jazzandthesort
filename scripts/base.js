@@ -49,7 +49,7 @@ function updateCart() {
   const cryptoSymbol = document.getElementById('crypto-symbol');
   const noteField = document.getElementById('order-note');
   const walletField = document.getElementById('wallet-address');
-  const walletField.textContent = walletAddresses[currency];
+  walletField.textContent = walletAddresses[currency];
 
 
   cartItems.innerHTML = '';

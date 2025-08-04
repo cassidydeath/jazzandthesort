@@ -24,7 +24,6 @@ async function fetchPrices() {
     console.error("Failed to fetch prices:", err);
     document.getElementById('xmr-price').textContent = 'Error';
     document.getElementById('btc-price').textContent = 'Error';
-    
   }
 }
 
@@ -47,10 +46,8 @@ function updateCart() {
   const totalUsdField = document.getElementById('total-usd');
   const totalCryptoField = document.getElementById('total-crypto');
   const cryptoSymbol = document.getElementById('crypto-symbol');
-  const noteField = document.getElementById('order-note');
   const walletField = document.getElementById('wallet-address');
-  walletField.textContent = walletAddresses[currency];
-
+  const noteField = document.getElementById('order-note');
 
   cartItems.innerHTML = '';
   let totalUsd = 0;
@@ -68,8 +65,10 @@ function updateCart() {
   totalUsdField.textContent = totalUsd.toFixed(2);
   totalCryptoField.textContent = totalCrypto.toFixed(8);
   cryptoSymbol.textContent = currency.toUpperCase();
-  noteField.textContent = `order: ${note} yourname@protonmail.com`;
   walletField.textContent = walletAddresses[currency];
+  if (noteField) {
+    noteField.textContent = `order: ${note} yourname@protonmail.com`;
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

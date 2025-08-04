@@ -33,33 +33,35 @@
     <h2>Your Cart</h2>
     <button onclick="clearCart()">🗑️ Clear Cart</button>
     <ul id="cart-items"></ul>
-    <p><strong>Total:</strong> <span id="total-usd">0.00</span> USD</p>
+    <p><strong>Total:</strong> $<span id="total-usd">0.00</span></p>
     <p><strong>Pay:</strong> <span id="total-crypto">0.00000000</span> <span id="crypto-symbol">XMR</span></p>
-<p><strong>Send payment to:</strong><br />
-  <code id="wallet-address" style="word-wrap: break-word; display: block; background: #f5f5f5; padding: 0.5em; border-radius: 4px;">
-    4867efphw4BayzrZDBGuncBkk1UvHpBX87MN3SMkVhKugksCG1H7TJnVXDPW7i66H4YiMg1uYR3iwCUax89yWKiJK5EiN3j
-  </code>
-</p>
+
+    <p><strong>Send payment to:</strong><br />
+      <code id="wallet-address" style="word-wrap: break-word; display: block; background: #f5f5f5; padding: 0.5em; border-radius: 4px;">
+        4867efphw4BayzrZDBGuncBkk1UvHpBX87MN3SMkVhKugksCG1H7TJnVXDPW7i66H4YiMg1uYR3iwCUax89yWKiJK5EiN3j
+      </code>
+    </p>
+
+    <p id="order-note" style="display: none;"></p>
 
     <form id="order-form" method="POST" action="send_order.php">
-  <h2>Complete Your Order</h2>
+      <h2>Complete Your Order</h2>
 
-  <label for="user_name">Name:</label><br>
-  <input type="text" id="user_name" name="user_name" required><br><br>
+      <label for="user_name">Name:</label><br>
+      <input type="text" id="user_name" name="user_name" required><br><br>
 
-  <label for="user_email">Email:</label><br>
-  <input type="email" id="user_email" name="user_email" required><br><br>
+      <label for="user_email">Email:</label><br>
+      <input type="email" id="user_email" name="user_email" required><br><br>
 
-  <label for="user_address">Shipping Address:</label><br>
-  <textarea id="user_address" name="user_address" rows="3" required></textarea><br><br>
+      <label for="user_address">Shipping Address:</label><br>
+      <textarea id="user_address" name="user_address" rows="3" required></textarea><br><br>
 
-  <label for="txid">Transaction ID (TXID):</label><br>
-  <input type="text" id="txid" name="txid" required><br><br>
+      <label for="txid">Transaction ID (TXID):</label><br>
+      <input type="text" id="txid" name="txid" required><br><br>
 
-  <input type="hidden" id="cart_data" name="cart_data">
-  <input type="submit" value="Send Order">
-</form>
-
+      <input type="hidden" id="cart_data" name="cart_data">
+      <input type="submit" value="Send Order">
+    </form>
   </div>
 
   <div class="footer">
@@ -67,8 +69,8 @@
     Thank you for supporting!
     <br><br><br>
   </div>
+
   <script src="./scripts/base.js"></script>
   <footer style="text-align: center;">© 2025 Cassidy Jazzman. Unauthorized use is prohibited.</footer>
-<script src="./scripts/cart.js"></script>
 </body>
 </html>

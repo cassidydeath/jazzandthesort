@@ -1,4 +1,3 @@
-<script>
     function updateClock() {
       const now = new Date();
       const formattedTime = now.toLocaleString('en-US', {

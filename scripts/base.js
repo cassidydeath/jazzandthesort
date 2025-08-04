@@ -1,4 +1,4 @@
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let prices = { xmr: 0, btc: 0 };
 
 const walletAddresses = {
@@ -29,11 +29,13 @@ async function fetchPrices() {
 
 function addToCart(name, priceUsd) {
   cart.push({ name, priceUsd });
+  localStorage.setItem('cart', JSON.stringify(cart));
   updateCart();
 }
 
 function clearCart() {
   cart = [];
+  localStorage.removeItem('cart');
   updateCart();
 }
 
@@ -67,7 +69,25 @@ function updateCart() {
   walletField.textContent = walletAddresses[currency];
 }
 
+// Fill hidden input on form submit with cart summary
 document.addEventListener('DOMContentLoaded', () => {
   fetchPrices();
   setInterval(fetchPrices, 60000);
+
+  const orderForm = document.getElementById('order-form');
+  if (orderForm) {
+    orderForm.addEventListener('submit', () => {
+      const cartDataField = document.getElementById('cart_data');
+
+      const currency = document.getElementById('currency-select').value;
+      const totalUsd = document.getElementById('total-usd').textContent;
+      const totalCrypto = document.getElementById('total-crypto').textContent;
+      const symbol = document.getElementById('crypto-symbol').textContent;
+
+      let cartText = cart.map(item => `${item.name} - $${item.priceUsd.toFixed(2)}`).join('\n');
+      cartText += `\n\nTotal USD: $${totalUsd}\nTotal in Crypto: ${totalCrypto} ${symbol}\nCurrency: ${currency}`;
+
+      cartDataField.value = cartText;
+    });
+  }
 });

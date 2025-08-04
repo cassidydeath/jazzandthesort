@@ -9,8 +9,21 @@ const walletAddresses = {
 async function fetchPrices() {
   try {
     const cacheBuster = new Date().getTime();
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=monero,bitcoin&vs_currencies=usd&cb=${cacheBuster}`);
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=monero,bitcoin&vs_currencies=usd&cb=${cacheBuster}`;
+    console.log("Fetching prices from:", url);
+
+    const res = await fetch(url, {
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0'
+      }
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`HTTP ${res.status}: ${text}`);
+    }
+
     const data = await res.json();
 
     prices.xmr = parseFloat(data.monero.usd);
@@ -66,14 +79,12 @@ function updateCart() {
   totalUsdField.textContent = totalUsd.toFixed(2);
   totalCryptoField.textContent = totalCrypto.toFixed(8);
   cryptoSymbol.textContent = currency.toUpperCase();
-
   walletField.textContent = walletAddresses[currency];
 
   if (noteField) {
     noteField.textContent = `order: ${note} yourname@protonmail.com`;
   }
 
-  // Update hidden input for form submission
   const cartDataField = document.getElementById('cart_data');
   if (cartDataField) {
     let cartText = cart.map(item => `${item.name} - $${item.priceUsd.toFixed(2)}`).join('\n');
@@ -84,9 +95,7 @@ function updateCart() {
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchPrices();
-  setInterval(fetchPrices, 60000); // update prices every minute
-
+  setInterval(fetchPrices, 60000);
   document.getElementById('currency-select').addEventListener('change', updateCart);
-
-  updateCart(); // initialize cart on load
+  updateCart();
 });

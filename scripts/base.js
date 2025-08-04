@@ -46,8 +46,8 @@ function updateCart() {
   const totalUsdField = document.getElementById('total-usd');
   const totalCryptoField = document.getElementById('total-crypto');
   const cryptoSymbol = document.getElementById('crypto-symbol');
-  const noteField = document.getElementById('order-note');
   const walletField = document.getElementById('wallet-address');
+  const noteField = document.getElementById('order-note');
 
   cartItems.innerHTML = '';
   let totalUsd = 0;
@@ -69,7 +69,9 @@ function updateCart() {
 
   walletField.textContent = walletAddresses[currency];
 
-  noteField.textContent = `order: ${note} yourname@protonmail.com`;
+  if (noteField) {
+    noteField.textContent = `order: ${note} yourname@protonmail.com`;
+  }
 
   // Update hidden input for form submission
   const cartDataField = document.getElementById('cart_data');
@@ -82,10 +84,9 @@ function updateCart() {
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchPrices();
-  setInterval(fetchPrices, 60000);
+  setInterval(fetchPrices, 60000); // update prices every minute
 
-  // Make sure the cart updates when the currency changes
   document.getElementById('currency-select').addEventListener('change', updateCart);
 
-  updateCart();
+  updateCart(); // initialize cart on load
 });

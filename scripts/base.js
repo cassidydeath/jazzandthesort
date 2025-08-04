@@ -2,8 +2,8 @@ let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let prices = { xmr: 0, btc: 0 };
 
 const walletAddresses = {
-  xmr: '8Bxx...yourMoneroAddressHere...gA3',
-  btc: 'bc1q...yourBitcoinAddressHere...9dk'
+  xmr: '4867efphw4BayzrZDBGuncBkk1UvHpBX87MN3SMkVhKugksCG1H7TJnVXDPW7i66H4YiMg1uYR3iwCUax89yWKiJK5EiN3j',
+  btc: 'bc1q4uuwgg3lsuq9gy9zmhcfazmn6wn4pdyj02zm7m'
 };
 
 async function fetchPrices() {
@@ -69,7 +69,6 @@ function updateCart() {
   walletField.textContent = walletAddresses[currency];
 }
 
-// Fill hidden input on form submit with cart summary
 document.addEventListener('DOMContentLoaded', () => {
   fetchPrices();
   setInterval(fetchPrices, 60000);

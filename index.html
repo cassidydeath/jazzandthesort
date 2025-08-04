@@ -44,24 +44,25 @@
 
     <p id="order-note" style="display: none;"></p>
 
-    <form id="order-form" method="POST" action="send_order.php">
-      <h2>Complete Your Order</h2>
+    <form id="order-form">
+  <h2>Complete Your Order</h2>
 
-      <label for="user_name">Name:</label><br>
-      <input type="text" id="user_name" name="user_name" required><br><br>
+  <label for="user_name">Name:</label><br>
+  <input type="text" id="user_name" name="user_name" required><br><br>
 
-      <label for="user_email">Email:</label><br>
-      <input type="email" id="user_email" name="user_email" required><br><br>
+  <label for="user_email">Email:</label><br>
+  <input type="email" id="user_email" name="user_email" required><br><br>
 
-      <label for="user_address">Shipping Address:</label><br>
-      <textarea id="user_address" name="user_address" rows="3" required></textarea><br><br>
+  <label for="user_address">Shipping Address:</label><br>
+  <textarea id="user_address" name="user_address" rows="3" required></textarea><br><br>
 
-      <label for="txid">Transaction ID (TXID):</label><br>
-      <input type="text" id="txid" name="txid" required><br><br>
+  <label for="txid">Transaction ID (TXID):</label><br>
+  <input type="text" id="txid" name="txid" required><br><br>
 
-      <input type="hidden" id="cart_data" name="cart_data">
-      <input type="submit" value="Send Order">
-    </form>
+  <input type="hidden" id="cart_data" name="cart_data">
+  <input type="submit" value="Send Order">
+</form>
+
   </div>
 
   <div class="footer">

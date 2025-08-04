@@ -24,6 +24,7 @@ async function fetchPrices() {
     console.error("Failed to fetch prices:", err);
     document.getElementById('xmr-price').textContent = 'Error';
     document.getElementById('btc-price').textContent = 'Error';
+    
   }
 }
 
@@ -48,6 +49,8 @@ function updateCart() {
   const cryptoSymbol = document.getElementById('crypto-symbol');
   const noteField = document.getElementById('order-note');
   const walletField = document.getElementById('wallet-address');
+  const walletField.textContent = walletAddresses[currency];
+
 
   cartItems.innerHTML = '';
   let totalUsd = 0;

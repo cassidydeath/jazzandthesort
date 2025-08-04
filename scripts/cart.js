@@ -19,10 +19,11 @@ document.getElementById("order-form").addEventListener("submit", function (e) {
     `Name: ${name}\nEmail: ${email}\nAddress:\n${address}\n\nTXID: ${txid}\n\nCart:\n${cartText}`
   );
 
-  const mailtoLink = `mailto:jazznthesort+order@gmail.com?subject=New%20Order%20from%20${encodeURIComponent(name)}&body=${body}`;
+  const mailtoLink = `mailto:jazzandthesort+order@gmail.com?subject=New%20Order%20from%20${encodeURIComponent(name)}&body=${body}`;
   window.location.href = mailtoLink;
   setTimeout(() => {
   alert("Your email client should have opened. Please make sure to send the email!");
 }, 500);
 
 });
+
